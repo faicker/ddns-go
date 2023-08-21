@@ -82,7 +82,7 @@ func (ali *Alidns) addUpdateDomainRecords(recordType string) {
 		err := ali.request(params, &records)
 
 		if err != nil {
-			domain.UpdateStatus = config.UpdatedFailed
+			domain.UpdateStatus = config.UpdatedPrepareFailed
 			return
 		}
 

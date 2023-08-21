@@ -110,7 +110,7 @@ func (baidu *BaiduCloud) addUpdateDomainRecords(recordType string) {
 
 		err := baidu.request("POST", baiduEndpoint+"/v1/domain/resolve/list", requestBody, &records)
 		if err != nil {
-			domain.UpdateStatus = config.UpdatedFailed
+			domain.UpdateStatus = config.UpdatedPrepareFailed
 			return
 		}
 

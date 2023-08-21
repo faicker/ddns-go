@@ -24,6 +24,8 @@ type updateStatusType string
 const (
 	// UpdatedNothing 未改变
 	UpdatedNothing updateStatusType = "未改变"
+	// UpdatedPrepareFailed 前置失败
+	UpdatedPrepareFailed = "前置失败"
 	// UpdatedFailed 更新失败
 	UpdatedFailed = "失败"
 	// UpdatedSuccess 更新成功
@@ -40,7 +42,7 @@ func ExecWebhook(domains *Domains, conf *Config) (v4Status updateStatusType, v6S
 	v4Status = getDomainsStatus(domains.Ipv4Domains)
 	v6Status = getDomainsStatus(domains.Ipv6Domains)
 
-	if conf.WebhookURL != "" && (v4Status != UpdatedNothing || v6Status != UpdatedNothing) {
+	if conf.WebhookURL != "" && (v4Status == UpdatedFailed || v4Status == UpdatedSuccess || v6Status == UpdatedFailed || v6Status == UpdatedSuccess) {
 		// 成功和失败都要触发webhook
 		method := "GET"
 		postPara := ""
@@ -50,7 +52,7 @@ func ExecWebhook(domains *Domains, conf *Config) (v4Status updateStatusType, v6S
 			postPara = replacePara(domains, conf.WebhookRequestBody, v4Status, v6Status)
 			if json.Valid([]byte(postPara)) {
 				contentType = "application/json"
-			// 如果 RequestBody 的 JSON 无效但前缀为 JSON 括号则为 JSON
+				// 如果 RequestBody 的 JSON 无效但前缀为 JSON 括号则为 JSON
 			} else if hasJSONPrefix(postPara) {
 				log.Println("RequestBody 的 JSON 无效！")
 			}

@@ -90,10 +90,10 @@ func RunOnce() {
 		// webhook
 		v4Status, v6Status := config.ExecWebhook(&domains, &conf)
 		// 重置单个cache
-		if v4Status == config.UpdatedFailed {
+		if v4Status == config.UpdatedFailed || v4Status == config.UpdatedPrepareFailed {
 			Ipcache[i][0] = util.IpCache{}
 		}
-		if v6Status == config.UpdatedFailed {
+		if v6Status == config.UpdatedFailed || v6Status == config.UpdatedPrepareFailed {
 			Ipcache[i][1] = util.IpCache{}
 		}
 	}
